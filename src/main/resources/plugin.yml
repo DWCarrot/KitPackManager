@@ -1,0 +1,8 @@
+name: KitPackManager
+version: '${project.version}'
+main: io.github.dwcarrot.kitpackmgr.KitPackManager
+api-version: 1.18
+prefix: KitPackManager
+authors: [ DWCarrot ]
+description: simple minecraft paper/spigot plugin for manage and distribute kitpack; for 买买镇2022
+website: https://dwcarrot.github.io
