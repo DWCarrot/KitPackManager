@@ -6,3 +6,16 @@ prefix: KitPackManager
 authors: [ DWCarrot ]
 description: simple minecraft paper/spigot plugin for manage and distribute kitpack; for 买买镇2022
 website: https://dwcarrot.github.io
+commands:
+  kitpackmanager:
+    description: KitPackManager main command
+    usage: /kitpackmanager [sub-command]
+    aliases:
+      - kpm
+permissions:
+  kitpackmanager.op:
+    description: Give access to KitPackManager Command
+    default: op
+  kitpackmanager.default:
+    description: Give access to KitPackManager Command
+    default: true

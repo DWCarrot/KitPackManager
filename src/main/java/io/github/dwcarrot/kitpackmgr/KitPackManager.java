@@ -1,9 +1,8 @@
 package io.github.dwcarrot.kitpackmgr;
 
+import io.github.dwcarrot.kitpackmgr.commands.Commands;
 import io.github.dwcarrot.kitpackmgr.events.RightClickHandler;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.player.PlayerInteractEvent;
+import io.github.dwcarrot.kitpackmgr.storage.CachedFileDatabase;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class KitPackManager extends JavaPlugin {
@@ -11,15 +10,20 @@ public final class KitPackManager extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        this.getLogger().info("KitPackManager enabled!");
-        this.getServer().getPluginManager().registerEvents(new RightClickHandler(), this);
+        CachedFileDatabase db = new CachedFileDatabase(this, this.getDataFolder());
+        Commands commands = new Commands(this, db);
+        this.getServer().getPluginManager().registerEvents(new RightClickHandler(this, db), this);
+        this.getServer().getPluginCommand("kitpackmanager").setExecutor(commands);
+
+
+        this.getSLF4JLogger().info(this.getName() + ' ' + "enabled");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
 
-        this.getLogger().info("KitPackManager disabled!");
+        this.getSLF4JLogger().info(this.getName() + ' ' + "disabled");
     }
 
 }
