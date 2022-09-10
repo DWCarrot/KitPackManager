@@ -16,7 +16,6 @@ public class ReloadFunc implements ISubCommand {
 
     public static final String SUBCMD = "reload";
 
-
     private final Plugin plugin;
 
     private final CachedFileDatabase db;
@@ -27,7 +26,7 @@ public class ReloadFunc implements ISubCommand {
     }
 
     @Override
-    public boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args) {
+    public boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args, int argsOffset) {
         Player player = (Player) commandSender;
         this.db.reloadAll(
                 new CompletionHandler<Set<UUID>, Plugin>() {
@@ -48,7 +47,7 @@ public class ReloadFunc implements ISubCommand {
     }
 
     @Override
-    public List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
         return null;
     }
 

@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface ISubCommand {
 
-    boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args);
+    boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args, int argsOffset);
 
-    List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args);
+    List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args, int argsOffset);
 
     boolean checkPermission(CommandSender commandSender);
 

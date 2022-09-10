@@ -256,7 +256,12 @@ class RTaskSync<A> implements ITask {
 
     @Override
     public void run() {
-        KitPack data = this.db.cache.getOrDefault(this.uuid, KitPack.EMPTY);
+        KitPack data;
+        if(this.uuid != KitPackAll.QUERY) {
+            data = this.db.cache.getOrDefault(this.uuid, KitPack.EMPTY);
+        } else {
+            data = new KitPackAll(this.db.cache.values());
+        }
         this.callback.completed(data, this.attachment);
         this.db.executeNext();
     }

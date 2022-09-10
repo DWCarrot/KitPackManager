@@ -4,7 +4,6 @@ import io.github.dwcarrot.kitpackmgr.controls.Operation;
 import io.github.dwcarrot.kitpackmgr.nms.NativeItemStack;
 import io.github.dwcarrot.kitpackmgr.nms.NativeMarkedItemStack;
 import io.github.dwcarrot.kitpackmgr.storage.KitPack;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 public class SetItemFunc implements ISubCommand {
 
@@ -29,40 +29,35 @@ public class SetItemFunc implements ISubCommand {
     }
 
     @Override
-    public boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args) {
+    public boolean invokeCommand(CommandSender commandSender, Command command, String label, String[] args, int argsOffset) {
         Player player = (Player) commandSender;
-        PlayerInventory inventory = player.getInventory();
-        ItemStack itemStack = inventory.getItemInMainHand();
-        if(itemStack.getType() == Material.AIR) {
-            player.sendMessage("nothing in main-hand");
+        ItemStack itemStack = InventoryUtils.getMainHandItem(player);
+        if(itemStack == null) {
             return true;
         }
-        if(itemStack.getAmount() == 1) {
-            NativeItemStack w = NativeMarkedItemStack.fromItemStack(itemStack);
-            if(w instanceof NativeMarkedItemStack) {
-                this.db.update(
-                        new KitPack((NativeMarkedItemStack)w),
-                        player,
-                        PlayerInventory::setItemInMainHand,
-                        this.plugin
-                    );
-            } else {
-                final UUID uuid = UUID.randomUUID();
-                this.db.create(
-                        new KitPack(w.set(uuid)),
-                        player,
-                        PlayerInventory::setItemInMainHand,
-                        this.plugin
-                    );
-            }
+        int amount = itemStack.getAmount();
+        NativeItemStack w = NativeMarkedItemStack.fromItemStack(itemStack);
+        if (w instanceof NativeMarkedItemStack) {
+            final NativeMarkedItemStack w0 = (NativeMarkedItemStack)w;
+            this.db.modify(
+                    w0.uuid,
+                    kitPack -> kitPack.setBind(w0),
+                    new SetPlayerMainHand(player, amount, "kit-pack created: %s"),
+                    this.plugin
+                );
         } else {
-            player.sendMessage("too many items in main hand");
+            final UUID uuid = UUID.randomUUID();
+            this.db.create(
+                    new KitPack(w.set(uuid)),
+                    new SetPlayerMainHand(player, amount, "kit-pack created: %s"),
+                    this.plugin
+                );
         }
         return true;
     }
 
     @Override
-    public List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
         return null;
     }
 
@@ -77,5 +72,28 @@ public class SetItemFunc implements ISubCommand {
     @Override
     public String getHelp(String main) {
         return main + ' ' + SetItemFunc.SUBCMD;
+    }
+}
+
+class SetPlayerMainHand implements BiConsumer<KitPack, Plugin> {
+
+    private final Player player;
+    private final int amount;
+    private final String formatSuccess;
+
+    SetPlayerMainHand(Player player, int amount, String formatSuccess) {
+        this.player = player;
+        this.amount = amount;
+        this.formatSuccess = formatSuccess;
+    }
+
+    @Override
+    public void accept(KitPack kitPack, Plugin plugin) {
+        if(kitPack != null) {
+            PlayerInventory playerInventory = this.player.getInventory();
+            ItemStack itemStack = kitPack.getBind().unwrap(this.amount);
+            playerInventory.setItemInMainHand(itemStack);
+            this.player.sendMessage(String.format(this.formatSuccess, kitPack.getBind().uuid));
+        }
     }
 }

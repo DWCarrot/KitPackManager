@@ -23,7 +23,9 @@ public class Commands implements CommandExecutor, TabCompleter {
         Operation dbOperation = new Operation(db);
         this.subCommands.put(SetItemFunc.SUBCMD, new SetItemFunc(plugin, dbOperation));
         this.subCommands.put(OfferItemFunc.SUBCMD, new OfferItemFunc(plugin, dbOperation));
-        this.subCommands.put(ItemsFunc.SUBCMD, new ItemsFunc(plugin, dbOperation));
+        this.subCommands.put(KitItemsFunc.SUBCMD, new KitItemsFunc(plugin, dbOperation));
+        this.subCommands.put(KitCommandsFunc.SUBCMD, new KitCommandsFunc(plugin, dbOperation));
+        this.subCommands.put(ListFunc.SUBCMD, new ListFunc(plugin, dbOperation));
         this.subCommands.put(ReloadFunc.SUBCMD, new ReloadFunc(plugin, db));
     }
 
@@ -33,7 +35,7 @@ public class Commands implements CommandExecutor, TabCompleter {
             ISubCommand subCommand = this.subCommands.get(args[0]);
             if(subCommand != null) {
                 if(subCommand.checkPermission(sender)) {
-                    if(!subCommand.invokeCommand(sender, command, label, args)) {
+                    if(!subCommand.invokeCommand(sender, command, label, args, 1)) {
                         sender.sendMessage("fail", subCommand.getHelp('/' + label));
                     }
                 } else {
@@ -59,7 +61,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         ISubCommand subCommand = this.subCommands.get(args[0]);
         if(subCommand != null) {
             if(subCommand.checkPermission(sender)) {
-                return subCommand.invokeTabComplete(sender, command, label, args);
+                return subCommand.invokeTabComplete(sender, command, label, args, 1);
             }
         }
         return null;

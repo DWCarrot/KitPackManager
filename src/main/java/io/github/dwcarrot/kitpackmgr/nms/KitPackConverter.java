@@ -2,14 +2,16 @@ package io.github.dwcarrot.kitpackmgr.nms;
 
 import com.google.common.collect.Lists;
 import io.github.dwcarrot.kitpackmgr.storage.KitPack;
+import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.commands.TagCommand;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class KitPackConverter implements ICompoundConverter<KitPack> {
     @Override
@@ -19,31 +21,33 @@ public class KitPackConverter implements ICompoundConverter<KitPack> {
         value.getBind().inner.save(bind);
         root.put("bind", bind);
         ListTag items = new ListTag();
-        List<NativeItemStack> itemStackList = value.getItems();
-        if(itemStackList != null) {
-            for(NativeItemStack itemStack : itemStackList) {
-                CompoundTag item = new CompoundTag();
-                itemStack.inner.save(item);
-                items.add(item);
-            }
+        for(NativeItemStack itemStack : value.getItems()) {
+            CompoundTag item = new CompoundTag();
+            itemStack.inner.save(item);
+            items.add(item);
         }
         root.put("items", items);
+        ListTag commands = new ListTag();
+        for(String command : value.getCommands()) {
+            commands.add(StringTag.valueOf(command));
+        }
+        root.put("commands", commands);
         return root;
     }
 
     @Override
     public KitPack convertBack(CompoundTag raw) throws Exception {
-        CompoundTag bind = raw.getCompound("bind");
-        NativeMarkedItemStack markedItemStack = (NativeMarkedItemStack) NativeMarkedItemStack.fromNBT(bind);
-        ListTag items = raw.getList("items", Tag.TAG_COMPOUND);
-        List<NativeItemStack> itemStackList = new ArrayList<>();
-        if(items != null) {
-            for(Tag item : items) {
-                CompoundTag tag = (CompoundTag)item;
-                ItemStack itemStack = ItemStack.of(tag);
-                itemStackList.add(new NativeItemStack(itemStack));
-            }
-        }
-        return new KitPack(markedItemStack, itemStackList);
+        CompoundTag bindTag = raw.getCompound("bind");
+        NativeMarkedItemStack bind = (NativeMarkedItemStack) NativeMarkedItemStack.fromNBT(bindTag);
+        List<NativeItemStack> items = raw.getList("items", Tag.TAG_COMPOUND)
+                .stream()
+                .map(NativeMarkedItemStack::fromNBTUnchecked)
+                .collect(Collectors.toCollection(ArrayList::new));
+        List<String> commands = raw.getList("commands", Tag.TAG_STRING)
+                .stream()
+                .map(Tag::getAsString)
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        return new KitPack(bind, items, commands);
     }
 }

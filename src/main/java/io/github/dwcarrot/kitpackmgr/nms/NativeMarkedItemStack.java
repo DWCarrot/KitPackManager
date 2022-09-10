@@ -1,10 +1,11 @@
 package io.github.dwcarrot.kitpackmgr.nms;
 
+import net.minecraft.nbt.CompoundTag;
+import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
-import java.util.logging.Logger;
 
 public class NativeMarkedItemStack extends NativeItemStack {
 
@@ -27,6 +28,11 @@ public class NativeMarkedItemStack extends NativeItemStack {
         return from(inner);
     }
 
+    public static NativeItemStack fromNBTUnchecked(net.minecraft.nbt.Tag nbt) {
+        net.minecraft.world.item.ItemStack inner = net.minecraft.world.item.ItemStack.of((CompoundTag) nbt);
+        return from(inner);
+    }
+
     public static NativeItemStack fromItemStack(ItemStack itemStack) {
         net.minecraft.world.item.ItemStack inner = CraftItemStack.asNMSCopy(itemStack);
         return from(inner);
@@ -39,5 +45,15 @@ public class NativeMarkedItemStack extends NativeItemStack {
         this.uuid = uuid;
         net.minecraft.nbt.CompoundTag tag = this.inner.getOrCreateTag();
         tag.putString(NBT_UUID_KEY, this.uuid.toString());
+    }
+
+    public void setAmountOne() {
+        this.inner.setCount(1);
+    }
+
+    public ItemStack unwrap(int amount) {
+        ItemStack itemStack = CraftItemStack.asBukkitCopy(this.inner);
+        itemStack.setAmount(amount);
+        return itemStack;
     }
 }
