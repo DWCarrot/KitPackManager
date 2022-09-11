@@ -2,6 +2,7 @@ package io.github.dwcarrot.kitpackmgr.nms;
 
 import com.google.common.collect.Lists;
 import io.github.dwcarrot.kitpackmgr.storage.KitPack;
+import io.github.dwcarrot.kitpackmgr.storage.Selector;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -32,6 +33,8 @@ public class KitPackConverter implements ICompoundConverter<KitPack> {
             commands.add(StringTag.valueOf(command));
         }
         root.put("commands", commands);
+        StringTag selector = StringTag.valueOf(value.getSelector().getRaw());
+        root.put("selector", selector);
         return root;
     }
 
@@ -47,7 +50,13 @@ public class KitPackConverter implements ICompoundConverter<KitPack> {
                 .stream()
                 .map(Tag::getAsString)
                 .collect(Collectors.toCollection(ArrayList::new));
-
-        return new KitPack(bind, items, commands);
+        Selector selector;
+        String s = raw.getString("selector");
+        if(s.isEmpty()) {
+            selector = new Selector();
+        } else {
+            selector = new Selector(s);
+        }
+        return new KitPack(bind, selector, items, commands);
     }
 }

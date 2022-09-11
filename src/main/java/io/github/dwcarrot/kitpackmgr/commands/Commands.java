@@ -25,6 +25,7 @@ public class Commands implements CommandExecutor, TabCompleter {
         this.subCommands.put(OfferItemFunc.SUBCMD, new OfferItemFunc(plugin, dbOperation));
         this.subCommands.put(KitItemsFunc.SUBCMD, new KitItemsFunc(plugin, dbOperation));
         this.subCommands.put(KitCommandsFunc.SUBCMD, new KitCommandsFunc(plugin, dbOperation));
+        this.subCommands.put(SelectorFunc.SUBCMD, new SelectorFunc(plugin, dbOperation));
         this.subCommands.put(ListFunc.SUBCMD, new ListFunc(plugin, dbOperation));
         this.subCommands.put(ReloadFunc.SUBCMD, new ReloadFunc(plugin, db));
     }

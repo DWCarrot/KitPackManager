@@ -64,13 +64,24 @@ public class OfferItemFunc implements ISubCommand {
     @Override
     public List<String> invokeTabComplete(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
         if(args.length > argsOffset) {
-            Server server = sender.getServer();
-            final String prefix = args[argsOffset++];
-            return server.getOnlinePlayers()
-                    .stream()
-                    .map(Player::getName)
-                    .filter(name -> name.startsWith(prefix))
-                    .toList();
+            if(args.length > argsOffset + 1) {
+                if(args.length > argsOffset + 2) {
+                    if(args[argsOffset+2].isEmpty()) {
+                        return List.of("?<amount>");
+                    }
+                }
+                if(args[argsOffset+1].isEmpty()) {
+                    return List.of("<uuid>");
+                }
+            } else {
+                Server server = sender.getServer();
+                final String prefix = args[argsOffset];
+                return server.getOnlinePlayers()
+                        .stream()
+                        .map(Player::getName)
+                        .filter(name -> name.startsWith(prefix))
+                        .toList();
+            }
         }
         return null;
     }

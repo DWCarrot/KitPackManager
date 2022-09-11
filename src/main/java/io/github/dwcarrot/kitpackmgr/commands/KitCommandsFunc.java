@@ -123,11 +123,26 @@ public class KitCommandsFunc extends ARL2ndSubCommand {
 
     @Override
     protected List<String> invokeTabCompleteAdd(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
+        if(args.length > argsOffset) {
+            if(args.length > argsOffset + 1) {
+                if(args[argsOffset+1].isEmpty()) {
+                    return List.of("<command>");
+                }
+            }
+            if(args[argsOffset].isEmpty()) {
+                return List.of("<command>", "?<index>");
+            }
+        }
         return null;
     }
 
     @Override
     protected List<String> invokeTabCompleteRemove(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
+        if(args.length > argsOffset) {
+            if(args[argsOffset].isEmpty()) {
+                return List.of("<index>");
+            }
+        }
         return null;
     }
 

@@ -4,11 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.dwcarrot</groupId>
-    <artifactId>kitpackmgr</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
     <name>KitPackManager</name>
 
     <description>simple minecraft paper/spigot plugin for manage and distribute kitpack; for 买买镇2022</description>
@@ -18,7 +13,13 @@
     </properties>
     <url>https://dwcarrot.github.io</url>
 
+    <groupId>io.github.dwcarrot</groupId>
+    <artifactId>kitpackmgr</artifactId>
+    <version>1.1</version>
+    <packaging>jar</packaging>
+
     <build>
+        <finalName>${artifactId}-${version}-b${buildNumber}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

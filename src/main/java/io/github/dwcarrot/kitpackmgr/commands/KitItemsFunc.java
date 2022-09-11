@@ -117,11 +117,21 @@ public class KitItemsFunc extends ARL2ndSubCommand {
 
     @Override
     protected List<String> invokeTabCompleteAdd(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
+        if(args.length > argsOffset) {
+            if(args[argsOffset].isEmpty()) {
+                return List.of("?<index>");
+            }
+        }
         return null;
     }
 
     @Override
     protected List<String> invokeTabCompleteRemove(CommandSender sender, Command command, String alias, String[] args, int argsOffset) {
+        if(args.length > argsOffset) {
+            if(args[argsOffset].isEmpty()) {
+                return List.of("<index>");
+            }
+        }
         return null;
     }
 

@@ -24,6 +24,8 @@ public class KitPack {
 
     NativeMarkedItemStack bind;
 
+    Selector selector;
+
     List<NativeItemStack> items;
 
     List<String> commands;
@@ -31,15 +33,17 @@ public class KitPack {
     public KitPack() {
         this.bind = null;
         this.items = null;
+        this.selector = null;
     }
 
     public KitPack(NativeMarkedItemStack itemStack) {
-        this(itemStack, new ArrayList<>(), new ArrayList<>());
+        this(itemStack, new Selector(), new ArrayList<>(), new ArrayList<>());
     }
 
-    public KitPack(NativeMarkedItemStack bind, List<NativeItemStack> items, List<String> commands) {
+    public KitPack(NativeMarkedItemStack bind, Selector selector, List<NativeItemStack> items, List<String> commands) {
         this.bind = bind;
         this.items = items;
+        this.selector = selector;
         this.commands = commands;
         this.bind.setAmountOne();
     }
@@ -51,6 +55,15 @@ public class KitPack {
     public boolean setBind(NativeMarkedItemStack bind) {
         this.bind = bind;
         this.bind.setAmountOne();
+        return true;
+    }
+
+    public Selector getSelector() {
+        return this.selector;
+    }
+
+    public boolean setSelector(Selector selector) {
+        this.selector = selector;
         return true;
     }
 
