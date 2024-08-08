@@ -34,7 +34,7 @@ public class NBTFile<T> {
                 byte[] buffer = idata.readNBytes(len);
                 String name = new String(buffer, StandardCharsets.UTF_8);
             }
-            CompoundTag compound = CompoundTag.TYPE.load(idata, 0, new NbtAccounter(this.limit));
+            CompoundTag compound = CompoundTag.TYPE.load(idata, NbtAccounter.create(this.limit));
             return this.converter.convertBack(compound);
         }
     }

@@ -2,7 +2,7 @@ package io.github.dwcarrot.kitpackmgr.nms;
 
 import net.minecraft.nbt.CompoundTag;
 import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_18_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_20_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
