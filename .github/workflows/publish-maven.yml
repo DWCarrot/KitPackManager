@@ -1,9 +1,8 @@
 name: Publish to Maven
 
 on:
-    label:
-        types:
-          - created
+    release:
+        types: [published]
 
 jobs:
     publish:
