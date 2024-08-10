@@ -22,7 +22,7 @@ jobs:
                 #     ./*.gradle.*
                 #     ./gradle/wrapper/gradle-wrapper.properties
             - name: Build and Publish to Maven
-              run: ./gradle publish
+              run: ./gradlew publish
               env:
                   MAVEN_DIR: https://maven.pkg.github.com/DWCarrot/KitPackManager
                   MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
