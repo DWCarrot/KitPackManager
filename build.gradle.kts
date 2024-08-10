@@ -102,6 +102,14 @@ publishing {
         maven {
             name = "PublishMaven"
             url = uri(mavenDirectory)
+            val mavenUserName = System.getenv("MAVEN_USERNAME")
+            val mavenPassword = System.getenv("MAVEN_PASSWORD")
+            if(mavenUserName != null && mavenPassword != null) {
+                credentials {
+                    username = mavenUserName
+                    password = mavenPassword
+                }
+            }
         }
     }
 }
